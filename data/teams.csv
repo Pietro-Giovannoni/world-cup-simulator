@@ -1,49 +1,49 @@
-name,code,confederation,ranking
-France,FRA,UEFA,1
-Argentina,ARG,CONMEBOL,2
-Spain,ESP,UEFA,3
-England,ENG,UEFA,4
-Brazil,BRA,CONMEBOL,5
-Morocco,MAR,CAF,6
-Portugal,POR,UEFA,7
-Belgium,BEL,UEFA,8
-Netherlands,NED,UEFA,9
-Mexico,MEX,CONCACAF,10
-Colombia,COL,CONMEBOL,11
-Germany,GER,UEFA,12
-Croatia,CRO,UEFA,13
-Switzerland,SUI,UEFA,14
-USA,USA,CONCACAF,16
-Japan,JPN,AFC,17
-Senegal,SEN,CAF,18
-Norway,NOR,UEFA,19
-Uruguay,URU,CONMEBOL,20
-Iran,IRN,AFC,22
-Austria,AUT,UEFA,23
-Egypt,EGY,CAF,24
-Ecuador,EQU,CONMEBOL,25
-Turkiye,TUR,UEFA,27
-Australia,AUS,AFC,28
-Algeria,ALG,CAF,29
-Canada,CAN,CONCACAF,30
-Ivory Coast,CIV,CAF,31
-South Korea,KOR,AFC,32
-Paraguay,PAY,CONMEBOL,34
-Sweden,SWE,UEFA,37
-Congo DR,COD,CAF,41
-Scotland,SCT,UEFA,42
-Panama,PAN,CONCACAF,44
-Czechia,CZE,UEFA,48
-South Africa,RSA,CAF,54
-Tunisia,TUN,CAF,57
-Saudi Arabia,KSA,AFC,58
-Qatar,QAT,AFC,59
-Uzbekistan,UZB,AFC,60
-Bosnia and Herzegovina,BIH,UEFA,61
-Iraq,IRQ,AFC,63
-Cabo Verde,CAP,CAF,64
-Ghana,GHA,CAF,65
-Jordan,JOR,AFC,73
-Curacao,CUR,CONCACAF,82
-New Zealand,NZL, OFC,86
-Haiti,HAI,CONCACAF,88
+name,code,confederation,ranking,host
+France,FRA,UEFA,1,False
+Argentina,ARG,CONMEBOL,2,False
+Spain,ESP,UEFA,3,False
+England,ENG,UEFA,4,False
+Brazil,BRA,CONMEBOL,5,False
+Morocco,MAR,CAF,6,False
+Portugal,POR,UEFA,7,False
+Belgium,BEL,UEFA,8,False
+Netherlands,NED,UEFA,9,False
+Mexico,MEX,CONCACAF,10,True
+Colombia,COL,CONMEBOL,11,False
+Germany,GER,UEFA,12,False
+Croatia,CRO,UEFA,13,False
+Switzerland,SUI,UEFA,14,False
+USA,USA,CONCACAF,16,True
+Japan,JPN,AFC,17,False
+Senegal,SEN,CAF,18,False
+Norway,NOR,UEFA,19,False
+Uruguay,URU,CONMEBOL,20,False
+Iran,IRN,AFC,22,False
+Austria,AUT,UEFA,23,False
+Egypt,EGY,CAF,24,False
+Ecuador,EQU,CONMEBOL,25,False
+Turkiye,TUR,UEFA,27,False
+Australia,AUS,AFC,28,False
+Algeria,ALG,CAF,29,False
+Canada,CAN,CONCACAF,30,True
+Ivory Coast,CIV,CAF,31,False
+South Korea,KOR,AFC,32,False
+Paraguay,PAY,CONMEBOL,34,False
+Sweden,SWE,UEFA,37,False
+Congo DR,COD,CAF,41,False
+Scotland,SCT,UEFA,42,False
+Panama,PAN,CONCACAF,44,False
+Czechia,CZE,UEFA,48,False
+South Africa,RSA,CAF,54,False
+Tunisia,TUN,CAF,57,False
+Saudi Arabia,KSA,AFC,58,False
+Qatar,QAT,AFC,59,False
+Uzbekistan,UZB,AFC,60,False
+Bosnia and Herzegovina,BIH,UEFA,61,False
+Iraq,IRQ,AFC,63,False
+Cabo Verde,CAP,CAF,64,False
+Ghana,GHA,CAF,65,False
+Jordan,JOR,AFC,73,False
+Curacao,CUR,CONCACAF,82,False
+New Zealand,NZL,OFC,86,False
+Haiti,HAI,CONCACAF,88,False
