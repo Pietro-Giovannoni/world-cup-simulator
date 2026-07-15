@@ -1,11 +1,8 @@
 from src.worldcup.team import Team
 
-def load_teams(file_path):
+def load_teams(file_path: str) -> list[Team]:
     """
-    Load teams from a CSV file and return a list of Team.
-
-    Args:
-        file_path (str): The path to the CSV file containing team data.
+    Loads teams from a CSV file and returns a list of teams.
     """ 
     teams = []
     with open(file_path, 'r') as file:

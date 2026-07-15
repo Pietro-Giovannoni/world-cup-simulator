@@ -4,9 +4,9 @@ from src.worldcup.team import Team
 @dataclass 
 class Group:
     """
-    object for group stage groups.
+    Object for group stage groups.
 
-    Args:
+    Attributes:
         name (str): Group name;
         teams (list[Team]): List of participating nations.
                             Default value is a fresh empty list, for every new instance. \\
