@@ -28,6 +28,9 @@ class Group:
         
         if not all(isinstance(nation, Team) for nation in self.teams):
             raise TypeError("All elements in teams must be Team objects.")
+        
+        if len(self.teams) > 4:
+            raise ValueError("A group cannot contain more than four teams.")
 
 
 

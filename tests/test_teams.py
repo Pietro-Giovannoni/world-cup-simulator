@@ -2,18 +2,10 @@ from src.worldcup.team import Team
 import pytest
 
 
-def test_team_creation():
+def test_team_creation(italy: Team):
     """
-    Checks the correct declaration of a Team object.
+    Checks the correct construction of a Team object.
     """
-    italy = Team(
-        name='Italy',
-        code='ITA',
-        confederation='UEFA',
-        ranking=15,
-        host=False
-    ) 
-
     assert italy.name == 'Italy'
     assert italy.code == 'ITA'
     assert italy.confederation == 'UEFA'
