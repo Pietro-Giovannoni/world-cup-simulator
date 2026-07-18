@@ -34,6 +34,16 @@ def austria():
         )
 
 @pytest.fixture
+def canada():
+    return Team(
+        name='Canada',
+        code='CAN',
+        confederation='CONCACAF',
+        ranking=30,
+        host=True
+        )
+
+@pytest.fixture
 def curacao():
     return Team(
         name='Curacao',
@@ -63,11 +73,27 @@ def jordan():
         host=False
         )
 
+@pytest.fixture
+def usa():
+    return Team(
+        name='USA',
+        code='USA',
+        confederation='CONCACAF',
+        ranking=16,
+        host=True
+    )
+
+
+
+@pytest.fixture
+def teams_j(argentina, austria, algeria, jordan):
+    return [argentina, austria, algeria, jordan]
+
 
 # preparing groups to be used in tests...
 @pytest.fixture
-def group_a(argentina):
+def group_j(teams_j):
     return Group(
-        name='A',
-        teams=[argentina]
+        name='J',
+        teams=teams_j
     )

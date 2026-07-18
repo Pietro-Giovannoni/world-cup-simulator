@@ -16,9 +16,18 @@ def create_pots(teams: list[Team], nations: int=48, n_pots: int=4) -> dict[int, 
         ValueError: If the input is inconsistent.
     """
 
+    if not isinstance(teams, list):
+        raise TypeError("teams must be a list.")
+    
+    if not all(isinstance(team, Team) for team in teams):
+        raise TypeError("Every element of teams must be a Team object.")
+
     if n_pots <= 0:
         raise ValueError("Number of pots must be positive.")
     
+    if nations <= 0:
+        raise ValueError("Number of nations must be positive.")
+
     if len(teams) != nations:
         raise ValueError(f"Must have {nations} teams in this tournament.")
     
