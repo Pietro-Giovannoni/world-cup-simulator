@@ -54,6 +54,16 @@ def curacao():
         )
 
 @pytest.fixture
+def france():
+    return Team(
+        name='France',
+        code='FRA',
+        confederation='UEFA',
+        ranking=1,
+        host=False
+        )
+
+@pytest.fixture
 def italy():
     return Team(
         name='Italy',
@@ -92,7 +102,14 @@ def teams_j(argentina, austria, algeria, jordan):
 
 # preparing groups to be used in tests...
 @pytest.fixture
-def group_j(teams_j):
+def empty_group():
+    return Group(
+        name='A',
+        teams=[]
+    )
+
+@pytest.fixture
+def full_group(teams_j):
     return Group(
         name='J',
         teams=teams_j

@@ -1,4 +1,6 @@
+from src.worldcup.group import Group
 from src.worldcup.team import Team
+UEFA='UEFA' # constant
 
 def create_pots(teams: list[Team], nations: int=48, n_pots: int=4) -> dict[int, list[Team]]:
     """
@@ -72,3 +74,35 @@ def create_pots(teams: list[Team], nations: int=48, n_pots: int=4) -> dict[int, 
         raise RuntimeError("Not all teams have been assigned.")
 
     return pots
+
+
+def can_add_team(team: Team, group: Group, capacity: int=4) -> bool:
+    """
+    Checks whether the selected team can be added to the selected group, according to FIFA rules.\\
+    Default number of teams per group is 4.
+    """
+
+    if not isinstance(team, Team):
+        raise TypeError(f'Expected Team, got {type(team).__name__} instead.')
+    
+    if not isinstance(group, Group):
+        raise TypeError(f'Expected Group, got {type(group).__name__} instead.')
+
+    if capacity <= 0:
+        raise ValueError('Group capacity must be positive.')
+
+    if len(group.teams) >= capacity or team in group.teams:
+        return False 
+    
+    # how many occurrences of this confederation are there in the group?
+    conf_count = sum(
+        team.confederation == member.confederation
+        for member in group.teams
+    )
+
+    # a group cannot have more than two UEFA nations 
+    if team.confederation == UEFA:
+        return conf_count < 2
+    
+    # a group cannot have more than one non-UEFA nation
+    return conf_count < 1

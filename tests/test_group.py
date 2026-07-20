@@ -42,12 +42,12 @@ def test_group_creation_too_many_teams(argentina: Team, austria: Team, algeria: 
         )
 
 
-def test_group_adding_double_team(group_j: Group, argentina: Team):
+def test_group_adding_double_team(full_group: Group, argentina: Team):
     """
     Checks that adding a team twice to the same group raises an exception.
     """
     with pytest.raises(ValueError):
-        group_j.add_team(argentina)
+        full_group.add_team(argentina)
 
 
 def test_group_adding_wrong_team(argentina: Team):
@@ -62,12 +62,12 @@ def test_group_adding_wrong_team(argentina: Team):
         group_a.add_team('austria')
 
 
-def test_group_adding_fifth_team(group_j: Group, curacao: Team):
+def test_group_adding_fifth_team(full_group: Group, curacao: Team):
     """
     Checks that adding a fifth team to a group raises an exception.
     """
     with pytest.raises(ValueError):
-        group_j.add_team(curacao)
+        full_group.add_team(curacao)
 
 
 
