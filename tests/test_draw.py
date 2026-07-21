@@ -11,19 +11,27 @@ def test_create_pots(algeria: Team, argentina: Team, austria: Team, canada: Team
     teams = [
         algeria, argentina, austria, canada
     ]
-    
+
     pots = create_pots(teams=teams, nations=4, n_pots=2)
-    
+
     assert len(pots) == 2
     assert all(len(pot) == 2 for pot in pots.values())
-    assert canada in pots[1] 
+    assert canada in pots[1]
     assert argentina in pots[1]
     assert austria in pots[2]
     assert algeria in pots[2]
 
-def test_create_pots_invalid_teams(): 
+def test_create_pots_invalid_teams():
     with pytest.raises(TypeError):
         create_pots(teams=True)
+
+def test_create_pots_invalid_nations():
+    with pytest.raises(TypeError):
+        create_pots(teams=[], nations='four', n_pots=1)
+
+def test_create_pots_invalid_n_pots():
+    with pytest.raises(TypeError):
+        create_pots(teams=[], nations=4, n_pots='two')
 
 def test_create_pots_zero_pots():
     with pytest.raises(ValueError):
@@ -80,12 +88,6 @@ def test_can_add_team_wrong_group(argentina: Team):
     with pytest.raises(TypeError):
         can_add_team(team=argentina, group=3)
 
-def test_can_add_team_wrong_capacity(argentina: Team, empty_group: Group):
-    """
-    Tests the `can_add_team` function with a wrong capacity.
-    """
-    with pytest.raises(ValueError):
-        can_add_team(team=argentina, group=empty_group, capacity=0)
 
 def test_can_add_team_full_group(italy: Team, full_group: Group):
     """
@@ -93,11 +95,16 @@ def test_can_add_team_full_group(italy: Team, full_group: Group):
     """
     assert can_add_team(team=italy, group=full_group) is False
 
-def test_can_add_team_double_team(austria: Team, full_group: Group):
+def test_can_add_team_double_team(austria: Team, usa: Team):
     """
     Tests the `can_add_team` function with a team that is already in the group.
     """
-    assert can_add_team(team=austria, group=full_group, capacity=5) is False
+    group_a = Group(
+        name='A',
+        teams=[austria, usa],
+        capacity=3
+    )
+    assert can_add_team(team=austria, group=group_a) is False
 
 def test_can_add_team_too_many_uefa(austria: Team, france: Team, italy: Team):
     """

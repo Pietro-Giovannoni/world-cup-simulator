@@ -9,10 +9,12 @@ def test_group_creation(argentina: Team):
     """
     group_a = Group(
         name='A',
-        teams=[argentina]
+        teams=[argentina],
+        capacity=3
     )
     assert group_a.name == 'A'
     assert group_a.teams == [argentina]
+    assert group_a.capacity == 3
 
 
 def test_group_creation_wrong_name(argentina: Team):
@@ -28,6 +30,32 @@ def test_group_creation_wrong_team(argentina: Team):
         Group(
             name='A',
             teams=argentina
+        )
+
+
+def test_group_creation_zero_capacity(argentina: Team):
+    with pytest.raises(ValueError):
+        Group(
+            name='A',
+            teams=[argentina],
+            capacity=0
+        )
+
+
+def test_group_creation_default_capacity(argentina: Team):
+    group_a = Group(
+        name='A',
+        teams=[argentina]
+    )
+    assert group_a.capacity == 4
+
+
+def test_group_creation_non_integer_capacity(argentina: Team):
+    with pytest.raises(TypeError):
+        Group(
+            name='A',
+            teams=[argentina],
+            capacity='four'
         )
 
 
@@ -68,6 +96,3 @@ def test_group_adding_fifth_team(full_group: Group, curacao: Team):
     """
     with pytest.raises(ValueError):
         full_group.add_team(curacao)
-
-
-
