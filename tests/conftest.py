@@ -1,6 +1,9 @@
-from src.worldcup.team import Team
-from src.worldcup.group import Group
 import pytest
+
+from src.worldcup.draw import create_pots
+from src.worldcup.group import Group
+from src.worldcup.team import Team
+
 
 # preparing teams to be used in tests...
 @pytest.fixture
@@ -114,3 +117,9 @@ def full_group(teams_j):
         name='J',
         teams=teams_j
     )
+
+
+# preparing pots to be used in tests...
+@pytest.fixture
+def sample_pot(algeria: Team, argentina: Team, austria: Team, canada: Team):
+    return create_pots(teams=[algeria, argentina, austria, canada], nations=4, n_pots=2)

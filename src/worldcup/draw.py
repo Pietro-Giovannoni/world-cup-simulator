@@ -1,4 +1,4 @@
-from random import Random, shuffle
+from random import Random
 from string import ascii_uppercase
 
 from src.worldcup.group import Group
@@ -117,12 +117,12 @@ def can_add_team(team: Team, group: Group) -> bool:
 
 def _create_groups(pots: dict[int, list[Team]]) -> dict[str, Group]:
     '''
-    (Private) Creates groups to be populated during the draw.
+    (Private) Creates empty groups to be populated during the draw.
     Args:
         pots (dict[int, list[Team]]): The pots to draw groups from.
 
     Returns:
-        groups (dict[str, Group]): The groups named using capital letters.
+        groups (dict[str, Group]): Empty groups named using capital letters.
     '''
     if not isinstance(pots, dict):
         raise TypeError(f'Expected pots as dict, got {type(pots).__name__} instead.')
@@ -149,6 +149,34 @@ def _create_groups(pots: dict[int, list[Team]]) -> dict[str, Group]:
     return groups
 
 
+def _draw_pot(pot: list[Team], groups: dict[str,Group], rng: Random) -> bool:
+    '''
+    (Private) Draws teams from a single pot into the groups, performing a greedy draw.
+
+    Args:
+        pot (list[Team]):   pot containing teams to be drawn.
+        groups: dict[str,Group]:    list of every group to be populated.
+        rng (Random):   random number generator
+
+    Returns:
+        bool:   True if every team in the pot has been assigned to a group.
+                False if the draw got stuck in a dead end.
+    '''
+
+    available_groups = list(groups.values())
+
+    for team in pot:
+        rng.shuffle(available_groups)
+        for group in available_groups:
+            if can_add_team(team=team, group=group):
+                group.add_team(team)
+                available_groups.remove(group)
+                break
+        else:
+            return False
+    return True
+
+
 
 
 def draw_groups(pots: dict[int, list[Team]], seed: int|None = None) -> dict[str, Group]:
@@ -166,5 +194,9 @@ def draw_groups(pots: dict[int, list[Team]], seed: int|None = None) -> dict[str,
     if not isinstance(seed, int) and seed is not None:
         raise TypeError(f'Expected seed as int, got {type(seed).__name__} instead.')
 
-    groups = _create_groups(pots)
+    rng=Random(seed)
+
+    groups = _create_groups(pots=pots)
+    for pot in pots.values():
+        _draw_pot(pot=pot, groups=groups, rng=rng)
     return groups

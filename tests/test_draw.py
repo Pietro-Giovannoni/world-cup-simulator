@@ -1,8 +1,9 @@
 import pytest
 
-from src.worldcup.draw import can_add_team, create_pots
+from src.worldcup.draw import can_add_team, create_pots, _create_groups, _draw_pot
 from src.worldcup.group import Group
 from src.worldcup.team import Team
+from random import Random
 
 
 # create_pots()
@@ -25,15 +26,15 @@ def test_create_pots(algeria: Team, argentina: Team, austria: Team, canada: Team
 
 def test_create_pots_invalid_teams():
     with pytest.raises(TypeError):
-        create_pots(teams=True)
+        create_pots(teams=True) # pyright: ignore[reportArgumentType]
 
 def test_create_pots_invalid_nations():
     with pytest.raises(TypeError):
-        create_pots(teams=[], nations='four', n_pots=1)
+        create_pots(teams=[], nations='four', n_pots=1) # pyright: ignore[reportArgumentType]
 
 def test_create_pots_invalid_n_pots():
     with pytest.raises(TypeError):
-        create_pots(teams=[], nations=4, n_pots='two')
+        create_pots(teams=[], nations=4, n_pots='two') # pyright: ignore[reportArgumentType]
 
 def test_create_pots_zero_pots():
     with pytest.raises(ValueError):
@@ -81,14 +82,14 @@ def test_can_add_team_wrong_team(empty_group: Group):
     Tests the `can_add_team` function with a wrong team.
     """
     with pytest.raises(TypeError):
-        can_add_team(team=1, group=empty_group)
+        can_add_team(team=1, group=empty_group) # pyright: ignore[reportArgumentType]
 
 def test_can_add_team_wrong_group(argentina: Team):
     """
     Tests the `can_add_team` function with a wrong group.
     """
     with pytest.raises(TypeError):
-        can_add_team(team=argentina, group=3)
+        can_add_team(team=argentina, group=3) # pyright: ignore[reportArgumentType]
 
 def test_can_add_team_full_group(italy: Team, full_group: Group):
     """
@@ -129,7 +130,7 @@ def test_can_add_team_too_many_non_uefa(curacao: Team, usa: Team):
 
     assert can_add_team(team=curacao, group=american_group) is False
 
-def test_can_add_team_second_uefa(argentina, france, italy):
+def test_can_add_team_second_uefa(argentina: Team, france: Team, italy: Team):
     """
     Tests the `can_add_team` function with a second UEFA nation.
     """
@@ -140,27 +141,86 @@ def test_can_add_team_second_uefa(argentina, france, italy):
     assert can_add_team(team=italy, group=wc_group) is True
 
 
-# draw_groups()
-def test_create_groups():
+# _create_groups()
+def test_create_groups(algeria: Team, argentina: Team, austria: Team, canada: Team):
     '''
     Tests the `_create_groups()` function with a valid input.
     '''
-    pass
+    sample_pot = create_pots(
+        teams=[algeria, argentina, austria, canada],
+        nations=4,
+        n_pots=2
+        )
+    groups = _create_groups(sample_pot)
+
+    assert len(groups) == 2
+    assert list(groups.keys()) == ['A', 'B']
+    assert isinstance(groups['A'], Group)
+    assert isinstance(groups['B'], Group)
+    assert groups['A'].name == 'A'
+    assert groups['B'].name == 'B'
+    assert groups['A'].teams == []
+    assert groups['B'].teams == []
 
 def test_create_groups_wrong_pots():
     '''
     Tests the `_create_groups()` function with a wrong `pots`.
     '''
-    pass
+    with pytest.raises(TypeError):
+        _create_groups(pots = 'No')
 
 def test_create_groups_empty_pots():
     '''
     Tests the `_create_groups()` function with empty `pots`.
     '''
-    pass
+    with pytest.raises(ValueError):
+            _create_groups(pots = {})
 
-def test_create_groups_wrong_seed():
+def test_create_groups_partially_empty_pots(argentina: Team):
     '''
-    Tests the `_create_groups()` function with a wrong `pots`.
+    Tests the `_create_groups()` function with partially empty `pots`.
     '''
-    pass
+    with pytest.raises(ValueError):
+            _create_groups(pots = {1:[argentina], 2:[]})
+
+def test_create_groups_different_sizes(argentina: Team, italy: Team, france: Team):
+    '''
+        Tests the `_create_groups()` function with unevenly sized `pots`.
+    '''
+    with pytest.raises(ValueError):
+                _create_groups(pots = {1:[argentina], 2:[france, italy]})
+
+# _draw_pot()
+def test_draw_pot_successful(algeria: Team, argentina: Team, austria: Team, canada: Team):
+    '''
+    Tests the `_draw_pot()` function with a successful result.
+    '''
+    pots = create_pots(
+        teams=[algeria, argentina, austria, canada],
+        nations=4, 
+        n_pots=2
+        )
+    groups = _create_groups(pots)
+    rng = Random(38)
+
+    assert  _draw_pot(pot=pots[1], groups=groups, rng=rng) is True
+    assert all(len(group.teams) == 1 for group in groups.values())
+    assert _draw_pot(pot=pots[2], groups=groups, rng=rng) is True
+    assert all(len(group.teams) == 2 for group in groups.values())
+
+
+def test_draw_pot_dead_end(canada: Team, curacao: Team, france: Team, usa: Team):
+    '''
+    Tests the `_draw_pot()` function with teams that lead to a dead end.
+    '''
+    pots = create_pots(
+            teams=[canada, curacao, france, usa],
+            nations=4, 
+            n_pots=2
+            )
+    groups = _create_groups(pots)
+    rng = Random(38)
+
+    assert _draw_pot(pot=pots[1], groups=groups, rng=rng) is True
+    assert _draw_pot(pot=pots[2], groups=groups, rng=rng) is False
+
