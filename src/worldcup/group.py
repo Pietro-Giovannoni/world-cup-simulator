@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
+
 from src.worldcup.team import Team
+
 
 @dataclass
 class Group:
@@ -11,7 +13,7 @@ class Group:
         teams (list[Team]): List of participating nations.
                             Default value is a fresh empty list, for every new instance. \\
                             This is to prevent different Group objects from sharing the same `teams` default value.
-        capacity (int): Group capacity; defualt is 4.
+        capacity (int): Group capacity; default is 4.
     """
     name: str
     teams: list[Team] = field(default_factory=list)
@@ -45,7 +47,7 @@ class Group:
     def add_team(self, team: Team):
         '''
         Adds a new team to this group.\\
-        Group must have maximum 4 teams and the new one must different from the ones already in.
+        Group must have maximum `capacity` teams and the new one must different from the ones already in.
         '''
 
         if len(self.teams) >= self.capacity:

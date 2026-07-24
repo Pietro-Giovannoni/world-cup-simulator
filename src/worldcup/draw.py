@@ -1,5 +1,9 @@
+from random import Random, shuffle
+from string import ascii_uppercase
+
 from src.worldcup.group import Group
 from src.worldcup.team import Team
+
 UEFA='UEFA' # constant
 
 def create_pots(teams: list[Team], nations: int=48, n_pots: int=4) -> dict[int, list[Team]]:
@@ -13,9 +17,6 @@ def create_pots(teams: list[Team], nations: int=48, n_pots: int=4) -> dict[int, 
 
     Returns:
         dict[int, list[Team]]: Mapping from pot number to the teams assigned to it.
-
-    Raises:
-        ValueError: If the input is inconsistent.
     """
 
     if not isinstance(teams, list):
@@ -112,3 +113,58 @@ def can_add_team(team: Team, group: Group) -> bool:
 
     # a group cannot have more than one non-UEFA nation
     return conf_count < 1
+
+
+def _create_groups(pots: dict[int, list[Team]]) -> dict[str, Group]:
+    '''
+    (Private) Creates groups to be populated during the draw.
+    Args:
+        pots (dict[int, list[Team]]): The pots to draw groups from.
+
+    Returns:
+        groups (dict[str, Group]): The groups named using capital letters.
+    '''
+    if not isinstance(pots, dict):
+        raise TypeError(f'Expected pots as dict, got {type(pots).__name__} instead.')
+
+    if not all(isinstance(pot, list) for pot in pots.values()):
+        raise TypeError('All pots values must be lists.')
+
+    if not all(isinstance(team, Team) for pot in pots.values() for team in pot):
+        raise TypeError('All pots values must be lists of Team objects.')
+
+    if len(pots) == 0 or any(len(pot)==0 for pot in pots.values()):
+        raise ValueError('Some pots are empty.')
+
+    pot_sizes = [len(pot) for pot in pots.values()]
+    if len(set(pot_sizes)) != 1:
+        raise ValueError('Not every pot has the same amount of teams.')
+
+
+    n_groups = len(next(iter(pots.values())))
+    groups = {
+        ascii_uppercase[i] : Group(name=ascii_uppercase[i], teams=[], capacity=len(pots))
+        for i in range(n_groups)
+    }
+    return groups
+
+
+
+
+def draw_groups(pots: dict[int, list[Team]], seed: int|None = None) -> dict[str, Group]:
+    """
+    Draws group stage groups from the given pots.
+
+    Args:
+        pots (dict[int, list[Team]]):    The pots to draw groups from.
+        seed (int or None):         Optional seed for the random number generator.
+
+    Returns:
+        groups (dict[str, Group]):  The groups ordered by name.
+    """
+    # validation
+    if not isinstance(seed, int) and seed is not None:
+        raise TypeError(f'Expected seed as int, got {type(seed).__name__} instead.')
+
+    groups = _create_groups(pots)
+    return groups

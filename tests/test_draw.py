@@ -1,7 +1,9 @@
 import pytest
-from src.worldcup.team import Team
+
+from src.worldcup.draw import can_add_team, create_pots
 from src.worldcup.group import Group
-from src.worldcup.draw import create_pots, can_add_team
+from src.worldcup.team import Team
+
 
 # create_pots()
 def test_create_pots(algeria: Team, argentina: Team, austria: Team, canada: Team):
@@ -88,7 +90,6 @@ def test_can_add_team_wrong_group(argentina: Team):
     with pytest.raises(TypeError):
         can_add_team(team=argentina, group=3)
 
-
 def test_can_add_team_full_group(italy: Team, full_group: Group):
     """
     Tests the `can_add_team` function with an already full group.
@@ -137,3 +138,29 @@ def test_can_add_team_second_uefa(argentina, france, italy):
         teams=[argentina, france]
     )
     assert can_add_team(team=italy, group=wc_group) is True
+
+
+# draw_groups()
+def test_create_groups():
+    '''
+    Tests the `_create_groups()` function with a valid input.
+    '''
+    pass
+
+def test_create_groups_wrong_pots():
+    '''
+    Tests the `_create_groups()` function with a wrong `pots`.
+    '''
+    pass
+
+def test_create_groups_empty_pots():
+    '''
+    Tests the `_create_groups()` function with empty `pots`.
+    '''
+    pass
+
+def test_create_groups_wrong_seed():
+    '''
+    Tests the `_create_groups()` function with a wrong `pots`.
+    '''
+    pass
