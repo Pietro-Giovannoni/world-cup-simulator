@@ -121,5 +121,9 @@ def full_group(teams_j):
 
 # preparing pots to be used in tests...
 @pytest.fixture
-def sample_pot(algeria: Team, argentina: Team, austria: Team, canada: Team):
-    return create_pots(teams=[algeria, argentina, austria, canada], nations=4, n_pots=2)
+def sample_pots(argentina: Team, france: Team, italy: Team, usa: Team):
+    return create_pots(teams=[argentina, france, italy, usa], nations=4, n_pots=2)
+
+@pytest.fixture
+def incompatible_pots(canada: Team, curacao: Team, france: Team, usa: Team):
+    return create_pots(teams=[canada, curacao, france, usa], nations=4, n_pots=2)

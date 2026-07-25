@@ -179,7 +179,7 @@ def _draw_pot(pot: list[Team], groups: dict[str,Group], rng: Random) -> bool:
 
 
 
-def draw_groups(pots: dict[int, list[Team]], seed: int|None = None) -> dict[str, Group]:
+def draw_groups(pots: dict[int, list[Team]], seed: int|None = None, max_attempts: int = 10) -> dict[str, Group]:
     """
     Draws group stage groups from the given pots.
 
@@ -189,14 +189,28 @@ def draw_groups(pots: dict[int, list[Team]], seed: int|None = None) -> dict[str,
 
     Returns:
         groups (dict[str, Group]):  The groups ordered by name.
+    
+    Raises:
+        RuntimeError if the draw cannot be completed.
     """
-    # validation
     if not isinstance(seed, int) and seed is not None:
         raise TypeError(f'Expected seed as int, got {type(seed).__name__} instead.')
 
+    if not isinstance(max_attempts, int):
+        raise TypeError(f'Expected max_attempts as int, got {type(max_attempts).__name__} instead.')
+
+    if max_attempts <= 0:
+        raise ValueError('max_attempts must be a positive integer.')
+
     rng=Random(seed)
 
-    groups = _create_groups(pots=pots)
-    for pot in pots.values():
-        _draw_pot(pot=pot, groups=groups, rng=rng)
-    return groups
+    for _ in range(max_attempts):
+        groups = _create_groups(pots)
+
+        for pot in pots.values():
+            if not _draw_pot(pot=pot, groups=groups, rng=rng):
+                break
+        else:
+            return groups
+
+    raise RuntimeError(f'Could not get a successful draw in {max_attempts} attempts.')

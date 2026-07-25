@@ -1,9 +1,10 @@
+from random import Random
+
 import pytest
 
-from src.worldcup.draw import can_add_team, create_pots, _create_groups, _draw_pot
+from src.worldcup.draw import _create_groups, _draw_pot, can_add_team, create_pots, draw_groups
 from src.worldcup.group import Group
 from src.worldcup.team import Team
-from random import Random
 
 
 # create_pots()
@@ -141,6 +142,7 @@ def test_can_add_team_second_uefa(argentina: Team, france: Team, italy: Team):
     assert can_add_team(team=italy, group=wc_group) is True
 
 
+
 # _create_groups()
 def test_create_groups(algeria: Team, argentina: Team, austria: Team, canada: Team):
     '''
@@ -167,7 +169,7 @@ def test_create_groups_wrong_pots():
     Tests the `_create_groups()` function with a wrong `pots`.
     '''
     with pytest.raises(TypeError):
-        _create_groups(pots = 'No')
+        _create_groups(pots = 'No') # pyright: ignore[reportArgumentType]
 
 def test_create_groups_empty_pots():
     '''
@@ -190,6 +192,8 @@ def test_create_groups_different_sizes(argentina: Team, italy: Team, france: Tea
     with pytest.raises(ValueError):
                 _create_groups(pots = {1:[argentina], 2:[france, italy]})
 
+
+
 # _draw_pot()
 def test_draw_pot_successful(algeria: Team, argentina: Team, austria: Team, canada: Team):
     '''
@@ -197,7 +201,7 @@ def test_draw_pot_successful(algeria: Team, argentina: Team, austria: Team, cana
     '''
     pots = create_pots(
         teams=[algeria, argentina, austria, canada],
-        nations=4, 
+        nations=4,
         n_pots=2
         )
     groups = _create_groups(pots)
@@ -208,14 +212,13 @@ def test_draw_pot_successful(algeria: Team, argentina: Team, austria: Team, cana
     assert _draw_pot(pot=pots[2], groups=groups, rng=rng) is True
     assert all(len(group.teams) == 2 for group in groups.values())
 
-
 def test_draw_pot_dead_end(canada: Team, curacao: Team, france: Team, usa: Team):
     '''
     Tests the `_draw_pot()` function with teams that lead to a dead end.
     '''
     pots = create_pots(
             teams=[canada, curacao, france, usa],
-            nations=4, 
+            nations=4,
             n_pots=2
             )
     groups = _create_groups(pots)
@@ -224,3 +227,50 @@ def test_draw_pot_dead_end(canada: Team, curacao: Team, france: Team, usa: Team)
     assert _draw_pot(pot=pots[1], groups=groups, rng=rng) is True
     assert _draw_pot(pot=pots[2], groups=groups, rng=rng) is False
 
+
+
+# draw_groups()
+def test_draw_groups_successful(sample_pots):
+    '''
+    Tests the `draw_groups()` function with a successful result.
+    '''
+    groups = draw_groups(pots=sample_pots, seed=41)
+    groups2 = draw_groups(pots=sample_pots, seed=41)
+
+    assert len(groups) == 2
+    assert list(groups.keys()) == ['A', 'B']
+    assert isinstance(groups['A'], Group)
+    assert isinstance(groups['B'], Group)
+    assert groups['A'].name == 'A'
+    assert groups['B'].name == 'B'
+    assert len(groups['A'].teams) == 2
+    assert len(groups['B'].teams) == 2
+    assert groups == groups2
+
+def test_draw_groups_dead_end(incompatible_pots):
+    '''
+    Tests the `draw_groups()` function with teams that lead to a dead end.
+    '''
+    with pytest.raises(RuntimeError):
+        draw_groups(pots=incompatible_pots, seed=41, max_attempts=3)
+
+def test_draw_groups_wrong_seed(sample_pots):
+    '''
+    Tests the `draw_groups()` function with an unacceptable `seed` value.
+    '''
+    with pytest.raises(TypeError):
+        draw_groups(pots=sample_pots, seed='abc')
+
+def test_draw_groups_wrong_max_attempts(sample_pots):
+    '''
+    Tests the `draw_groups()` function with an unacceptable `max_attempts` value.
+    '''
+    with pytest.raises(TypeError):
+        draw_groups(pots=sample_pots, max_attempts='abc')
+
+def test_draw_groups_negative_max_attempts(sample_pots):
+    '''
+    Tests the `draw_groups()` function with a negative `max_attempts` value.
+    '''
+    with pytest.raises(ValueError):
+        draw_groups(pots=sample_pots, max_attempts=-3)
