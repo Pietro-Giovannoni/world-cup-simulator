@@ -6,7 +6,7 @@ from src.worldcup.team import Team
 @dataclass
 class Group:
     """
-    Object for group stage groups.
+    Object representing group stage groups.
 
     Attributes:
         name (str): Group name.
