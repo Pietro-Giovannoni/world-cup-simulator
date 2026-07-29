@@ -1,7 +1,6 @@
 from random import Random
 
 import pytest
-
 from src.worldcup.draw import _create_groups, _draw_pot, can_add_team, create_pots, draw_groups
 from src.worldcup.group import Group
 from src.worldcup.team import Team
@@ -259,14 +258,14 @@ def test_draw_groups_wrong_seed(sample_pots):
     Tests the `draw_groups()` function with an unacceptable `seed` value.
     '''
     with pytest.raises(TypeError):
-        draw_groups(pots=sample_pots, seed='abc')
+        draw_groups(pots=sample_pots, seed='abc') # pyright: ignore[reportArgumentType]
 
 def test_draw_groups_wrong_max_attempts(sample_pots):
     '''
     Tests the `draw_groups()` function with an unacceptable `max_attempts` value.
     '''
     with pytest.raises(TypeError):
-        draw_groups(pots=sample_pots, max_attempts='abc')
+        draw_groups(pots=sample_pots, max_attempts='abc') # pyright: ignore[reportArgumentType]
 
 def test_draw_groups_negative_max_attempts(sample_pots):
     '''
